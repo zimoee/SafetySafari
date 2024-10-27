@@ -10,7 +10,7 @@ pygame.init()
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Map Adventure")
+pygame.display.set_caption("9am Class")
 
 # 定義顏色
 WHITE = (255, 255, 255)
