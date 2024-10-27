@@ -2,7 +2,6 @@ import pygame
 import random
 import time
 
-# 初始化 Pygame
 pygame.init()
 
 # 設定螢幕尺寸
@@ -249,7 +248,7 @@ while running:
         # 繪製繼續按鈕
         continue_button_rect = pygame.Rect(screen_width // 2 - button_width // 2, screen_height // 2 + 50, button_width, button_height)
         pygame.draw.rect(screen, (0, 255, 0), continue_button_rect)  # 綠色按鈕
-        continue_text = result_font.render("Continue", True, BLACK)
+        continue_text = result_font.render("Restart", True, BLACK)
         screen.blit(continue_text, (screen_width // 2 - continue_text.get_width() // 2, screen_height // 2 + 55))
 
         # 繪製退出按鈕

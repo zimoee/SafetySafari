@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import time
 
 # 初始化 Pygame
 pygame.init()
@@ -21,32 +22,41 @@ RED = (255, 0, 0)
 player_pos = [400, 300]
 player_size = 50
 
-# 學校的位置
+# 學校的位置和大小
 school_rect = pygame.Rect(600, 400, 100, 100)
 
 # 字體設定
 font = pygame.font.Font(None, 60)
 
+# 載入地圖圖片
+map_image = pygame.image.load("school.png")  # 替換成你的圖片名稱
+map_image = pygame.transform.scale(map_image, (screen_width, screen_height))  # 調整圖片大小
+
+# 創建學校的透明表面
+school_surface = pygame.Surface((school_rect.width, school_rect.height))
+school_surface.fill(GREEN)  # 設定學校的顏色
+school_surface.set_alpha(0)  # 設定透明度 (0 - 完全透明, 255 - 不透明)
+
 # 顯示歡迎畫面
 def show_welcome_screen():
     screen.fill(WHITE)
-    welcome_text = font.render('Welcome to XXX World', True, BLACK)
+    welcome_text = font.render('Welcome to your first day at UofT', True, BLACK)
     text_rect = welcome_text.get_rect(center=(screen_width // 2, screen_height // 2))
     screen.blit(welcome_text, text_rect)
     pygame.display.flip()
-    pygame.time.delay(3000)  # 停留 3 秒
+    time.sleep(3)
 
     screen.fill(WHITE)
-    going_to_school_text = font.render('XXX is on his way to school...', True, BLACK)
+    going_to_school_text = font.render("You're on your way to class...", True, BLACK)
     text_rect = going_to_school_text.get_rect(center=(screen_width // 2, screen_height // 2))
     screen.blit(going_to_school_text, text_rect)
     pygame.display.flip()
-    pygame.time.delay(3000)  # 停留 3 秒
+    time.sleep(3)
 
 # 顯示結束提示畫面
 def show_end_screen():
     screen.fill(WHITE)
-    end_text = font.render('As soon as he steps into the classroom,', True, BLACK)
+    end_text = font.render('As soon as you walk into the classroom,', True, BLACK)
     text_rect1 = end_text.get_rect(center=(screen_width // 2, screen_height // 2 - 30))
     screen.blit(end_text, text_rect1)
 
@@ -88,8 +98,12 @@ while running:
     # 清空畫面
     screen.fill(WHITE)
 
-    # 畫學校的位置
-    pygame.draw.rect(screen, GREEN, school_rect)
+    # 顯示地圖圖片
+    screen.blit(map_image, (0, 0))  # 在螢幕上繪製地圖圖片
+
+    # 在螢幕上繪製透明的學校
+    screen.blit(school_surface, school_rect.topleft)  # 繪製學校的透明表面
+
     # 畫玩家
     pygame.draw.rect(screen, RED, player_rect)
 
