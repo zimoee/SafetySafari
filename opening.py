@@ -33,8 +33,12 @@ map_image = pygame.transform.scale(map_image, (screen_width, screen_height))
 
 # 創建學校的透明表面
 school_surface = pygame.Surface((school_rect.width, school_rect.height))
-school_surface.fill(GREEN) 
+school_surface.fill(GREEN)
 school_surface.set_alpha(0)
+
+# 載入玩家的貓圖片並縮放
+cat_image = pygame.image.load('cat.png')
+cat_image = pygame.transform.scale(cat_image, (player_size, player_size))
 
 # 顯示歡迎畫面
 def show_welcome_screen():
@@ -90,15 +94,16 @@ while running:
     if player_rect.colliderect(school_rect):
         show_end_screen()
         os.system('python main.py')
-        pygame.quit() 
+        pygame.quit()
         sys.exit()
 
+    # 更新畫面
     screen.fill(WHITE)
-    screen.blit(map_image, (0, 0)) 
+    screen.blit(map_image, (0, 0))
     screen.blit(school_surface, school_rect.topleft)
 
-    # 畫玩家
-    pygame.draw.rect(screen, RED, player_rect)
+    # 畫玩家的貓圖片
+    screen.blit(cat_image, (player_pos[0], player_pos[1]))
 
     # 更新畫面
     pygame.display.flip()

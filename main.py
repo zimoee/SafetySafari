@@ -7,7 +7,7 @@ pygame.init()
 
 screen_width, screen_height = 1021, 1021
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Natural Disaster Game")
+pygame.display.set_caption("Level 1: Earthquake")
 
 BLUE = (0, 0, 255)
 BROWN = (139, 69, 19)
@@ -43,6 +43,8 @@ hint_close = False
 dialogue_open = False 
 selected_action = None
 
+cat_image = pygame.image.load('cat.png')
+
 # Function to shake the screen
 def screen_shake(duration, intensity):
     start_time = time.time()
@@ -64,6 +66,10 @@ while running:
     if not game_over:
         screen.blit(background_image, (0, 0))  # 繪製背景圖片
 
+        safety_hint_font = pygame.font.SysFont("Arial", 30)
+        safety_hint_text = safety_hint_font.render("Please try to find a safer place inside the classroom!", True, BLACK)
+        screen.blit(safety_hint_text, (screen_width // 2 - safety_hint_text.get_width() // 2, 10))  # 在螢幕上方居中顯示
+        
         # 計算剩餘時間
         elapsed_time = time.time() - start_time
         remaining_time = game_time - elapsed_time
@@ -98,7 +104,8 @@ while running:
         screen.blit(desk_surface, desk_pos3)
 
         # 繪製角色
-        pygame.draw.rect(screen, BLACK, (player_pos[0], player_pos[1], player_size, player_size))
+        # pygame.draw.rect(screen, BLACK, (player_pos[0], player_pos[1], player_size, player_size))
+        screen.blit(cat_image, (player_pos[0], player_pos[1]))
 
         # 更新分數和時間顯示
         font = pygame.font.SysFont("Arial", 30)
@@ -141,11 +148,11 @@ while running:
             crouch_button = pygame.Rect(player_pos[0] + 70, player_pos[1] - 100, 100, 40)
             sit_button = pygame.Rect(player_pos[0] + 70, player_pos[1] - 50, 100, 40)
 
-            pygame.draw.rect(screen, (0, 255, 0), crouch_button)  # 綠色按鈕
+            pygame.draw.rect(screen, WHITE, crouch_button)
             crouch_text = dialogue_font.render("Crouch", True, BLACK)
             screen.blit(crouch_text, (crouch_button.x + 15, crouch_button.y + 5))
 
-            pygame.draw.rect(screen, (255, 0, 0), sit_button)  # 紅色按鈕
+            pygame.draw.rect(screen, WHITE, sit_button)  
             sit_text = dialogue_font.render("Sit on the chair", True, BLACK)
             screen.blit(sit_text, (sit_button.x + 10, sit_button.y + 5))
 
@@ -188,13 +195,13 @@ while running:
 
         # 獲取按鍵狀態
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             player_pos[0] -= 5
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
             player_pos[0] += 5
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
             player_pos[1] -= 5
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
             player_pos[1] += 5
 
         # 檢查碰撞
@@ -233,13 +240,13 @@ while running:
         button_height = 50
 
         continue_button_rect = pygame.Rect(screen_width // 2 - button_width // 2, screen_height // 2 + 50, button_width, button_height)
-        pygame.draw.rect(screen, (0, 255, 0), continue_button_rect)  # 綠色按鈕
+        pygame.draw.rect(screen, WHITE, continue_button_rect)  # 綠色按鈕
         continue_text = result_font.render("Continue", True, BLACK)
         screen.blit(continue_text, (screen_width // 2 - continue_text.get_width() // 2, screen_height // 2 + 55))
 
         # 繪製退出按鈕
         exit_button_rect = pygame.Rect(screen_width // 2 - button_width // 2, screen_height // 2 + 140, button_width, button_height)
-        pygame.draw.rect(screen, (255, 0, 0), exit_button_rect)  # 紅色按鈕
+        pygame.draw.rect(screen, WHITE, exit_button_rect)  # 紅色按鈕
         exit_text = result_font.render("Exit", True, BLACK)
         screen.blit(exit_text, (screen_width // 2 - exit_text.get_width() // 2, screen_height // 2 + 145))
 
