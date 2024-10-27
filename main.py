@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import os
 
 pygame.init()
 
@@ -8,14 +9,14 @@ screen_width, screen_height = 1021, 1021
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Natural Disaster Game")
 
-BLUE = (0, 0, 255)   
-BROWN = (139, 69, 19) 
+BLUE = (0, 0, 255)
+BROWN = (139, 69, 19)
 YELLOW = (255, 255, 0)
 BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+WHITE = (255, 255, 255) 
 
 player_score = 6
-game_time = 10  # 10 秒限時
+game_time = 10 
 start_time = time.time()
 
 player_pos = [400, 300]
@@ -32,18 +33,15 @@ desk_pos3 = [673, 683]
 background_image = pygame.image.load('background.png')
 background_image = pygame.transform.scale(background_image, (screen_width, screen_height))  # 調整圖片大小以符合螢幕
 
-# 變數控制顯示警告
 show_warning = False
 game_over = False
 win = False
 
-# 變數控制提示顯示
-show_hint = True  # 初始狀態為顯示提示
-hint_close = False  # 控制提示關閉狀態
+show_hint = True  
+hint_close = False  
 
-# 在遊戲主循環的碰撞檢查部分添加對話框邏輯
-dialogue_open = False  # 控制對話框開啟狀態
-selected_action = None  # 記錄玩家選擇的行動
+dialogue_open = False 
+selected_action = None
 
 # Function to shake the screen
 def screen_shake(duration, intensity):
@@ -60,8 +58,6 @@ def screen_shake(duration, intensity):
         pygame.display.flip()
         pygame.time.delay(30)  # Adjust delay for smoother effect
 
-
-
 # 遊戲主循環
 running = True
 while running:
@@ -73,13 +69,13 @@ while running:
         remaining_time = game_time - elapsed_time
 
         # 設定每個物品的尺寸
-        window_size = (161, 156)  # 窗戶大小
-        cabinet_size = (188, 134)  # 櫃子大小
-        desk_size = (182, 130)  # 桌子大小
+        window_size = (161, 156) 
+        cabinet_size = (188, 134) 
+        desk_size = (182, 130) 
 
         # 繪製完全透明的障礙物和目標
         window_surface = pygame.Surface(window_size, pygame.SRCALPHA)
-        window_surface.fill((0, 0, 255))  # 窗戶顏色
+        window_surface.fill((0, 0, 255))
         window_surface.set_alpha(0)  # 設定透明度為 0 (完全透明)
         screen.blit(window_surface, window_pos)
 
@@ -89,12 +85,12 @@ while running:
         screen.blit(window_surface1, window_pos1)
 
         cabinet_surface = pygame.Surface(cabinet_size, pygame.SRCALPHA)
-        cabinet_surface.fill((139, 69, 19))  # 櫃子顏色
+        cabinet_surface.fill((139, 69, 19))
         cabinet_surface.set_alpha(0)
         screen.blit(cabinet_surface, cabinet_pos)
 
         desk_surface = pygame.Surface(desk_size, pygame.SRCALPHA)
-        desk_surface.fill((255, 255, 0))  # 桌子顏色
+        desk_surface.fill((255, 255, 0))
         desk_surface.set_alpha(0)
         screen.blit(desk_surface, desk_pos)
         screen.blit(desk_surface, desk_pos1)
@@ -115,7 +111,7 @@ while running:
         if remaining_time <= 0:
             game_over = True
             win = False
-            print("Time's up")
+            print("Time's up!")
         if player_score < 0:
             game_over = True
             win = False
@@ -130,17 +126,16 @@ while running:
                          desk_pos3[1] <= player_pos[1] <= desk_pos3[1] + desk_size[1])
 
         if touching_desk:
-            dialogue_open = True  # 打開對話框
+            dialogue_open = True
         else:
-            dialogue_open = False  # 離開桌子時關閉對話框
+            dialogue_open = False
 
 
         if dialogue_open:
-            # 繪製對話框
             dialogue_font = pygame.font.SysFont("Arial", 30)
             dialogue_surface = pygame.Surface((300, 150))
             dialogue_surface.fill(WHITE)
-            screen.blit(dialogue_surface, (player_pos[0] + 50, player_pos[1] - 150))  # 在角色旁邊顯示
+            screen.blit(dialogue_surface, (player_pos[0] + 50, player_pos[1] - 150))
 
             # 顯示選項
             crouch_button = pygame.Rect(player_pos[0] + 70, player_pos[1] - 100, 100, 40)
@@ -162,43 +157,44 @@ while running:
                     if crouch_button.collidepoint(mouse_pos):
                         selected_action = 'crouch'
                         win = True
-                        game_over = True
+                        game_over = True  
                         dialogue_open = False 
                     elif sit_button.collidepoint(mouse_pos):
                         selected_action = 'sit on the chair'
-                        player_score -= 5
+                        player_score -= 5  # 扣除分數
                         if player_score<0:
                             win = False
                             game_over = True
-                            dialogue_open = False 
-                        game_over = False 
-                        dialogue_open = False 
+                            dialogue_open = False
+                        game_over = False
+                        dialogue_open = False  
 
+        # 在遊戲主循環中添加這段代碼以顯示提示
         if show_hint:
             hint_font = pygame.font.SysFont("Arial", 20)
-            hint_text = hint_font.render("Hint: Find a safe place from the earthquake! (click to close)", True, BLACK)
-            hint_rect = hint_text.get_rect(topleft=(screen_width - 550, 30))  
-            pygame.draw.rect(screen, WHITE, (hint_rect.x - 5, hint_rect.y - 5, hint_rect.width + 10, hint_rect.height + 10)) 
+            hint_text = hint_font.render("Hint: Find a safe place to stay!!! Good luck (click me to close the hint)", True, BLACK)
+            hint_rect = hint_text.get_rect(topleft=(screen_width - 550, 30))  # 右上角位置
+            pygame.draw.rect(screen, WHITE, (hint_rect.x - 5, hint_rect.y - 5, hint_rect.width + 10, hint_rect.height + 10))  # 繪製提示框
             screen.blit(hint_text, hint_rect)
 
-
+        # 處理事件
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:  
+            if event.type == pygame.MOUSEBUTTONDOWN: 
                 mouse_pos = event.pos
-                if hint_rect.collidepoint(mouse_pos):  
-                    show_hint = False  
+                if hint_rect.collidepoint(mouse_pos):
+                    show_hint = False 
 
-
+        # 獲取按鍵狀態
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        if keys[pygame.K_LEFT]:
             player_pos[0] -= 5
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        if keys[pygame.K_RIGHT]:
             player_pos[0] += 5
-        if keys[pygame.K_UP] or keys[pygame.K_w]:
+        if keys[pygame.K_UP]:
             player_pos[1] -= 5
-        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        if keys[pygame.K_DOWN]:
             player_pos[1] += 5
 
         # 檢查碰撞
@@ -208,20 +204,21 @@ while running:
             window_pos1[1] <= player_pos[1] <= window_pos1[1] + window_size[1]) or \
            (cabinet_pos[0] <= player_pos[0] <= cabinet_pos[0] + cabinet_size[0] and 
             cabinet_pos[1] <= player_pos[1] <= cabinet_pos[1] + cabinet_size[1]):
-            if not show_warning:
+            if not show_warning:  
                 player_score -= 2 
                 show_warning = True 
                 screen_shake(duration=0.5, intensity=5) 
         else:
-            show_warning = False 
+            show_warning = False  # 離開後隱藏警告
 
+        # 顯示警告訊息
         if show_warning:
             warning_text = font.render("This is not safe!", True, BLACK)
-            screen.blit(warning_text, (screen_width // 2 - 100, screen_height // 2 - 15)) 
+            screen.blit(warning_text, (screen_width // 2 - 100, screen_height // 2 - 15))  # 在畫面中央顯示警告
 
-    else: 
+    else:  # 遊戲結束後顯示結果畫面
         show_hint = False
-        screen.fill(WHITE) 
+        screen.fill(WHITE)  # 用白色填充螢幕
         result_font = pygame.font.SysFont("Arial", 50)
         if win:
             result_text = result_font.render("Congratulations! You win!", True, BLACK)
@@ -236,12 +233,13 @@ while running:
         button_height = 50
 
         continue_button_rect = pygame.Rect(screen_width // 2 - button_width // 2, screen_height // 2 + 50, button_width, button_height)
-        pygame.draw.rect(screen, (0, 255, 0), continue_button_rect) 
-        continue_text = result_font.render("Restart", True, BLACK)
+        pygame.draw.rect(screen, (0, 255, 0), continue_button_rect)  # 綠色按鈕
+        continue_text = result_font.render("Continue", True, BLACK)
         screen.blit(continue_text, (screen_width // 2 - continue_text.get_width() // 2, screen_height // 2 + 55))
 
+        # 繪製退出按鈕
         exit_button_rect = pygame.Rect(screen_width // 2 - button_width // 2, screen_height // 2 + 140, button_width, button_height)
-        pygame.draw.rect(screen, (255, 0, 0), exit_button_rect)  
+        pygame.draw.rect(screen, (255, 0, 0), exit_button_rect)  # 紅色按鈕
         exit_text = result_font.render("Exit", True, BLACK)
         screen.blit(exit_text, (screen_width // 2 - exit_text.get_width() // 2, screen_height // 2 + 145))
 
@@ -251,21 +249,16 @@ while running:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:  # 鼠標點擊事件
                 mouse_pos = event.pos
-                if continue_button_rect.collidepoint(mouse_pos):  # 如果點擊到繼續按鈕
-                    # 重新開始遊戲
-                    player_score = 6
-                    game_time = 10
-                    start_time = time.time()
-                    player_pos = [400, 300]
-                    game_over = False
-                    win = False
-                if exit_button_rect.collidepoint(mouse_pos):  # 如果點擊到退出按鈕
+                if continue_button_rect.collidepoint(mouse_pos): 
+                    pygame.quit() 
+                    os.system('python itemretrieval.py') 
+                    exit()  # 確保當前程式完全退出
+                if exit_button_rect.collidepoint(mouse_pos):
                     running = False
                 
 
-    pygame.display.flip()  # 更新顯示
-    pygame.time.delay(30)
+    pygame.display.flip() 
+    pygame.time.delay(30) 
 
-# shake screen after user presses exit
-screen_shake(duration=1, intensity=5) 
+screen_shake(2, 5)
 pygame.quit()
